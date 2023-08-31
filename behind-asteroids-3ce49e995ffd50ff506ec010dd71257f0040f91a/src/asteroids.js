@@ -19,7 +19,6 @@ function randomAsteroidShape (lvl) {
   }
   return pts;
 }
-
 function randomAsteroids () {
   asteroids = [];
   for (var i=0; i<8; ++i) {
@@ -100,3 +99,4 @@ function drawAsteroid (o) {
   path(o[4]);
   ctx.stroke();
 }
+module.exports = randomAsteroidShape;

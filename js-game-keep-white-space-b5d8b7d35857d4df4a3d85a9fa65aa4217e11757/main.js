@@ -350,7 +350,7 @@ class Vec {
     this.y += dy;
   }
 }
-
+module.exports = {Vec};
 class Enemies {
   constructor(ctx) {
     this.ctx = ctx;
@@ -780,7 +780,7 @@ class GameStatus {
     }
   }
 }
-
+module.exports = {Vec, GameStatus};
 function init() {
   if (touchMode) {
     window.addEventListener('touchstart', e => touchStart(e));
