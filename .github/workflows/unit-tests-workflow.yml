@@ -3,7 +3,7 @@ run-name: ${{github.actor}} is trying to push or merge to ${{github.ref}} at ${{
 on: [push, pull_request]
 jobs:
   build:
-    runs-on: ubuntu-latest, windows-latest, macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
