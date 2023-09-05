@@ -1,0 +1,13 @@
+name: unit-tests-workflow
+run-name: ${{github.actor}} is trying to push or merge to ${{github.ref}} at ${{github.repository}}
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - name: Run unit tests
+        run: npm run test

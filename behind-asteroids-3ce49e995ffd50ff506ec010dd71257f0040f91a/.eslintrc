@@ -23,5 +23,10 @@
     "node": true,
     "browser": true
   },
-  "extends": "eslint:recommended"
+  "extends": "eslint:recommended",
+  "parser": "babel-eslint",
+  "ecmaFeatures": {
+    "jsx": true,
+    "modules": true}
+    
 }
