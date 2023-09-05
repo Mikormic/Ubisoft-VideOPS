@@ -1,4 +1,4 @@
-import randomAsteroidShape from "../asteroids";
+const randomAsteroidShape = require('../asteroids');
 
 describe(
     'test randomAsteroidShape', ()=>{
