@@ -9,6 +9,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 'latest'
-      - name: Run unit tests
-        run: cd ${{github.workspace}}/js-game-keep-white-space-b5d8b7d35857d4df4a3d85a9fa65aa4217e11757 && npm install && npx jest
-         cd ${{github.workspace}}/js13k-2021-fd4b9e6e1954b8850125c0a7a0219db0607bf37e && npm install && npx jest
+      - name: Install dependencies
+        working-directory: ./js-game-keep-white-space-b5d8b7d35857d4df4a3d85a9fa65aa4217e11757
+        run: npm install
+      - name: Run tests
+        working-directory: ./js-game-keep-white-space-b5d8b7d35857d4df4a3d85a9fa65aa4217e11757
+        run: npx jest
