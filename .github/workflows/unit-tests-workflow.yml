@@ -10,4 +10,6 @@ jobs:
         with:
           node-version: 14
       - name: Run unit tests
-        run: npm run test
+        run: cd ${{github.workspace}} && npm install && npx jest
+         cd ${{github.workspace}} && npm install && npx jest
+         cd ${{github.workspace}} && npm install && npx jest
