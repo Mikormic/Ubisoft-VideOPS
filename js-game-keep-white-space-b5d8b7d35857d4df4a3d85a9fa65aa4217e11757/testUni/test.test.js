@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 const Class = require("../main");
+
 describe("test Vec", () => {
   test("new Vec(1, 2) return x:1, y:2", () => {
     let result = new Class.Vec(1, 2);
