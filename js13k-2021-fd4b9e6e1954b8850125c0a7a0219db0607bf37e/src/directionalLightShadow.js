@@ -1,7 +1,7 @@
-import { camera_lookAt, camera_updateWorldMatrix } from './camera.js';
-import { mat4_create, mat4_multiplyMatrices } from './mat4.js';
-import { orthoCamera_create } from './orthoCamera.js';
-import { vec3_create, vec3_setFromMatrixPosition } from './vec3.js';
+import { camera_lookAt, camera_updateWorldMatrix } from "./camera.js";
+import { mat4_create, mat4_multiplyMatrices } from "./mat4.js";
+import { orthoCamera_create } from "./orthoCamera.js";
+import { vec3_create, vec3_setFromMatrixPosition } from "./vec3.js";
 
 var _lookTarget = vec3_create();
 
@@ -17,7 +17,7 @@ export var lightShadow_updateMatrices = (lightShadow, light) => {
 
   camera_lookAt(
     camera,
-    vec3_setFromMatrixPosition(_lookTarget, light.target.matrixWorld),
+    vec3_setFromMatrixPosition(_lookTarget, light.target.matrixWorld)
   );
   camera_updateWorldMatrix(camera);
 
@@ -32,6 +32,6 @@ export var lightShadow_updateMatrices = (lightShadow, light) => {
   mat4_multiplyMatrices(
     matrix,
     mat4_multiplyMatrices(matrix, matrix, camera.projectionMatrix),
-    camera.matrixWorldInverse,
+    camera.matrixWorldInverse
   );
 };

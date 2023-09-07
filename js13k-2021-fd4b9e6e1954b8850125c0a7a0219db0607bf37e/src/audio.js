@@ -1,10 +1,10 @@
-import { randFloatSpread } from './math.js';
+import { randFloatSpread } from "./math.js";
 
 var audioContext = new AudioContext();
 var { sampleRate } = audioContext;
 
 // A4 is 69.
-var toFreq = note => 2 ** ((note - 69) / 12) * 440;
+var toFreq = (note) => 2 ** ((note - 69) / 12) * 440;
 
 var playSound = (buffer, destination = audioContext.destination) => {
   var source = new AudioBufferSourceNode(audioContext, { buffer });
@@ -35,29 +35,29 @@ var generateNotes = (fn, duration, volume) =>
         target[property] = sound;
         return sound;
       },
-    },
+    }
   );
 
 // Oscillators
 // f: frequency, t: parameter.
-var sin = f => t => Math.sin(t * 2 * Math.PI * f);
+var sin = (f) => (t) => Math.sin(t * 2 * Math.PI * f);
 
-var saw = f => t => {
+var saw = (f) => (t) => {
   var n = ((t % (1 / f)) * f) % 1;
   return -1 + 2 * n;
 };
 
-var tri = f => t => {
+var tri = (f) => (t) => {
   var n = ((t % (1 / f)) * f) % 1;
   return n < 0.5 ? -1 + 2 * (2 * n) : 1 - 2 * (2 * n);
 };
 
-var square = f => t => {
+var square = (f) => (t) => {
   var n = ((t % (1 / f)) * f) % 1;
   return n > 0.5 ? 1 : -1;
 };
 
-var decay = d => () => t => Math.exp(-t * d);
+var decay = (d) => () => (t) => Math.exp(-t * d);
 
 // Brown noise.
 // https://github.com/Tonejs/Tone.js/blob/dev/Tone/source/Noise.ts
@@ -73,35 +73,35 @@ var noise = () => {
 };
 
 // Operators.
-var add = (a, b) => f => {
+var add = (a, b) => (f) => {
   var af = a(f);
   var bf = b(f);
 
   return (t, i, a) => af(t, i, a) + bf(t, i, a);
 };
 
-var mul = (a, b) => f => {
+var mul = (a, b) => (f) => {
   var af = a(f);
   var bf = b(f);
 
   return (t, i, a) => af(t, i, a) * bf(t, i, a);
 };
 
-var scale = (fn, n) => f => {
+var scale = (fn, n) => (f) => {
   var fnf = fn(f);
   return (t, i, a) => n * fnf(t, i, a);
 };
 
-var slide = (fn, slide) => f => (t, i, a) =>
+var slide = (fn, slide) => (f) => (t, i, a) =>
   fn(f + (i / a.length) * slide)(t, i, a);
 
-var pitchJump = (fn, pitchJump, pitchJumpTime) => f => (t, i, a) =>
+var pitchJump = (fn, pitchJump, pitchJumpTime) => (f) => (t, i, a) =>
   fn(f + (t > pitchJumpTime ? pitchJump : 0))(t, i, a);
 
 var adsr = (attack, decay, sustain, release, sustainVolume) => {
   var length = attack + decay + sustain + release;
 
-  return () => t => {
+  return () => (t) => {
     if (t < attack) {
       return t / attack;
     }
@@ -140,7 +140,7 @@ destination.connect(convolver).connect(wet).connect(audioContext.destination);
   var offlineContext = new OfflineAudioContext(
     1,
     duration * sampleRate,
-    sampleRate,
+    sampleRate
   );
 
   var gainNode = new GainNode(offlineContext, { gain: 0 });
@@ -158,7 +158,7 @@ destination.connect(convolver).connect(wet).connect(audioContext.destination);
   convolver.buffer = await offlineContext.startRendering();
 })();
 
-var play = sound => playSound(sound, destination);
+var play = (sound) => playSound(sound, destination);
 
 var shoot = generateNotes(mul(mul(saw, noise), decay(24)), 0.5, 1);
 export var playShoot = () => play(shoot[16]);
@@ -166,22 +166,21 @@ export var playShoot = () => play(shoot[16]);
 var jump = generateNotes(
   mul(
     mul(square, pitchJump(square, toFreq(36) - toFreq(31), 0.1)),
-    adsr(0.003, 0.05, 0.01, 0.03, 0.5),
+    adsr(0.003, 0.05, 0.01, 0.03, 0.5)
   ),
   0.3,
-  0.2,
+  0.2
 );
 export var playJump = () => play(jump[31]);
 
 var enemyDeath = generateNotes(
   mul(
     mul(saw, pitchJump(square, toFreq(27) - toFreq(15), 0.1)),
-    adsr(0.001, 0.3, 0.4, 0.3, 0.7),
+    adsr(0.001, 0.3, 0.4, 0.3, 0.7)
   ),
   1,
-  0.4,
+  0.4
 );
 export var playEnemyDeath = () => play(enemyDeath[15]);
 
-
-addEventListener('click', () => audioContext.resume(), { once: true });
+addEventListener("click", () => audioContext.resume(), { once: true });

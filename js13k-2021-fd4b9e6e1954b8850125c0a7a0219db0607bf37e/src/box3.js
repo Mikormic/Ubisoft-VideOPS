@@ -1,4 +1,4 @@
-import { object3d_traverse, object3d_updateWorldMatrix } from './object3d.js';
+import { object3d_traverse, object3d_updateWorldMatrix } from "./object3d.js";
 import {
   vec3_add,
   vec3_addVectors,
@@ -9,13 +9,13 @@ import {
   vec3_multiplyScalar,
   vec3_setScalar,
   vec3_subVectors,
-} from './vec3.js';
+} from "./vec3.js";
 
 var _vector = vec3_create();
 
 export var box3_create = (
   min = vec3_create(Infinity, Infinity, Infinity),
-  max = vec3_create(-Infinity, -Infinity, -Infinity),
+  max = vec3_create(-Infinity, -Infinity, -Infinity)
 ) => ({ min, max });
 
 export var box3_copy = (a, b) => {
@@ -24,13 +24,13 @@ export var box3_copy = (a, b) => {
   return a;
 };
 
-export var box3_makeEmpty = box => {
+export var box3_makeEmpty = (box) => {
   box.min.x = box.min.y = box.min.z = Infinity;
   box.max.x = box.max.y = box.max.z -= Infinity;
   return box;
 };
 
-export var box3_isEmpty = box =>
+export var box3_isEmpty = (box) =>
   box.max.x < box.min.x || box.max.y < box.min.y || box.max.z < box.min.z;
 
 export var box3_getCenter = (box, target) =>
@@ -51,20 +51,20 @@ export var box3_expandByPoint = (box, point) => {
 
 export var box3_expandByObject = (box, object) => {
   object3d_updateWorldMatrix(object);
-  object3d_traverse(object, node =>
-    node.geometry?.vertices.map(vertex =>
+  object3d_traverse(object, (node) =>
+    node.geometry?.vertices.map((vertex) =>
       box3_expandByPoint(
         box,
-        vec3_applyMatrix4(Object.assign(_vector, vertex), node.matrixWorld),
-      ),
-    ),
+        vec3_applyMatrix4(Object.assign(_vector, vertex), node.matrixWorld)
+      )
+    )
   );
   return box;
 };
 
 export var box3_setFromPoints = (box, points) => {
   box3_makeEmpty(box);
-  points.map(point => box3_expandByPoint(box, point));
+  points.map((point) => box3_expandByPoint(box, point));
   return box;
 };
 

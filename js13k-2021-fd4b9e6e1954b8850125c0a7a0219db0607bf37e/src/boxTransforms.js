@@ -1,7 +1,7 @@
-import { boxGeom_create } from './boxGeom.js';
-import { nx, ny, nz, px, py, pz } from './boxIndices.js';
-import { geom_translate } from './geom.js';
-import { rearg } from './utils.js';
+import { boxGeom_create } from "./boxGeom.js";
+import { nx, ny, nz, px, py, pz } from "./boxIndices.js";
+import { geom_translate } from "./geom.js";
+import { rearg } from "./utils.js";
 import {
   vec3_add,
   vec3_create,
@@ -14,7 +14,7 @@ import {
   vec3_setY,
   vec3_setZ,
   vec3_subVectors,
-} from './vec3.js';
+} from "./vec3.js";
 
 var _vector = vec3_create();
 
@@ -25,9 +25,9 @@ var centroidB = vec3_create();
 export var setVector = (vector, value, identity) => {
   if (Array.isArray(value)) {
     vec3_set(vector, ...value);
-  } else if (typeof value === 'object') {
+  } else if (typeof value === "object") {
     Object.assign(vector, identity, value);
-  } else if (typeof value === 'number') {
+  } else if (typeof value === "number") {
     vec3_setScalar(vector, value);
   }
 };
@@ -35,7 +35,7 @@ export var setVector = (vector, value, identity) => {
 var computeCentroid = (geom, indices, vector) => {
   vec3_setScalar(vector, 0);
 
-  indices.map(index => vec3_add(vector, geom.vertices[index]));
+  indices.map((index) => vec3_add(vector, geom.vertices[index]));
   vec3_divideScalar(vector, indices.length);
 
   return vector;
@@ -63,7 +63,7 @@ var transformBoxVertices = (method, identity = vec3_create()) => (
 ) => {
   vectors.map(([indices, delta]) => {
     setVector(_vector, delta, identity);
-    indices.map(index => method(geom.vertices[index], _vector));
+    indices.map((index) => method(geom.vertices[index], _vector));
   });
 
   return geom;
@@ -71,17 +71,17 @@ var transformBoxVertices = (method, identity = vec3_create()) => (
 
 export var $translate = rearg(transformBoxVertices(vec3_add));
 export var $scale = rearg(
-  transformBoxVertices(vec3_multiply, vec3_create(1, 1, 1)),
+  transformBoxVertices(vec3_multiply, vec3_create(1, 1, 1))
 );
 
-var transformAxisBoxVertices = (method, identity = vec3_create()) => axis => (
+var transformAxisBoxVertices = (method, identity = vec3_create()) => (axis) => (
   geom,
   ...vectors
 ) => {
   vectors.map(([indices, delta = identity[axis]]) => {
     Object.assign(_vector, identity);
     _vector[axis] = delta;
-    indices.map(index => method(geom.vertices[index], _vector));
+    indices.map((index) => method(geom.vertices[index], _vector));
   });
 
   return geom;
@@ -89,13 +89,13 @@ var transformAxisBoxVertices = (method, identity = vec3_create()) => axis => (
 
 var translateAxisBoxVertices = transformAxisBoxVertices(vec3_add);
 
-export var $translateX = rearg(translateAxisBoxVertices('x'));
-export var $translateY = rearg(translateAxisBoxVertices('y'));
-export var $translateZ = rearg(translateAxisBoxVertices('z'));
+export var $translateX = rearg(translateAxisBoxVertices("x"));
+export var $translateY = rearg(translateAxisBoxVertices("y"));
+export var $translateZ = rearg(translateAxisBoxVertices("z"));
 
-var callBoxVertices = method => (geom, ...vectors) => {
+var callBoxVertices = (method) => (geom, ...vectors) => {
   vectors.map(([indices, value]) =>
-    indices.map(index => method(geom.vertices[index], value)),
+    indices.map((index) => method(geom.vertices[index], value))
   );
 
   return geom;
@@ -131,11 +131,11 @@ export var extrude = (() => {
               indexB ^ 1
             : indexB
         ],
-        geom.vertices[indexA],
+        geom.vertices[indexA]
       );
       vec3_add(
         Object.assign(extrudedGeom.vertices[indexA], geom.vertices[indexA]),
-        _vector,
+        _vector
       );
     });
     return extrudedGeom;
@@ -147,6 +147,6 @@ export var deleteFaces = rearg((geom, ...faceIndices) => {
     .flat()
     .sort((a, b) => a - b)
     .reverse()
-    .map(index => geom.faces.splice(index, 1));
+    .map((index) => geom.faces.splice(index, 1));
   return geom;
 });

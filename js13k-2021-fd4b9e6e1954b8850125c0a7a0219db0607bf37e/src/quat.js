@@ -1,4 +1,4 @@
-import { clamp } from './math.js';
+import { clamp } from "./math.js";
 
 export var quat_create = (x = 0, y = 0, z = 0, w = 1) => ({ x, y, z, w });
 
@@ -123,10 +123,10 @@ export var quat_rotateTowards = (a, b, step) => {
 
 export var quat_dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 
-export var quat_length = q =>
+export var quat_length = (q) =>
   Math.sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
 
-export var quat_normalize = q => {
+export var quat_normalize = (q) => {
   var l = quat_length(q);
 
   if (!l) {

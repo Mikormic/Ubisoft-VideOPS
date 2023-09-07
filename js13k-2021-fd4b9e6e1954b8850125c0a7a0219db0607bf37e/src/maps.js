@@ -1,18 +1,18 @@
-import { findTarget, getRange, RANGE_MELEE } from './ai.js';
-import { playEnemyDeath, playShoot } from './audio.js';
-import { boxGeom_create } from './boxGeom.js';
-import { nx_ny, ny } from './boxIndices.js';
-import { align } from './boxTransforms.js';
-import { DEBUG, gravity } from './constants.js';
-import { light_create } from './directionalLight.js';
-import { lightShadow_updateMatrices } from './directionalLightShadow.js';
-import { component_create, entity_add } from './entity.js';
-import { on } from './events.js';
-import { interval_create } from './interval.js';
-import { keys_create } from './keys.js';
-import { material_create } from './material.js';
-import { clamp, randFloat, randFloatSpread } from './math.js';
-import { mesh_create } from './mesh.js';
+import { findTarget, getRange, RANGE_MELEE } from "./ai.js";
+import { playEnemyDeath, playShoot } from "./audio.js";
+import { boxGeom_create } from "./boxGeom.js";
+import { nx_ny, ny } from "./boxIndices.js";
+import { align } from "./boxTransforms.js";
+import { DEBUG, gravity } from "./constants.js";
+import { light_create } from "./directionalLight.js";
+import { lightShadow_updateMatrices } from "./directionalLightShadow.js";
+import { component_create, entity_add } from "./entity.js";
+import { on } from "./events.js";
+import { interval_create } from "./interval.js";
+import { keys_create } from "./keys.js";
+import { material_create } from "./material.js";
+import { clamp, randFloat, randFloatSpread } from "./math.js";
+import { mesh_create } from "./mesh.js";
 import {
   box,
   bridge_create,
@@ -25,7 +25,7 @@ import {
   scanner_create,
   spaceBetween,
   starfield_create,
-} from './models.js';
+} from "./models.js";
 import {
   object3d_add,
   object3d_create,
@@ -36,8 +36,8 @@ import {
   object3d_rotateZ,
   object3d_traverse,
   object3d_updateWorldMatrix,
-} from './object3d.js';
-import { orthoCamera_updateProjectionMatrix } from './orthoCamera.js';
+} from "./object3d.js";
+import { orthoCamera_updateProjectionMatrix } from "./orthoCamera.js";
 import {
   BODY_BULLET,
   BODY_DYNAMIC,
@@ -46,19 +46,19 @@ import {
   physics_add,
   physics_bodies,
   physics_update,
-} from './physics.js';
+} from "./physics.js";
 import {
   body_trace,
   player_create,
   player_update,
   trace_create,
-} from './player.js';
+} from "./player.js";
 import {
   quat_create,
   quat_rotateTowards,
   quat_setFromAxisAngle,
-} from './quat.js';
-import { ray_create, ray_intersectObjects } from './ray.js';
+} from "./quat.js";
+import { ray_create, ray_intersectObjects } from "./ray.js";
 import {
   vec3_add,
   vec3_addScaledVector,
@@ -77,7 +77,7 @@ import {
   vec3_subVectors,
   vec3_Y,
   vec3_Z,
-} from './vec3.js';
+} from "./vec3.js";
 
 var keys = keys_create();
 var isMouseDown = false;
@@ -109,9 +109,9 @@ export var map0 = (gl, scene, camera) => {
   var playerMesh = physics_add(
     mesh_create(
       boxGeom_create(playerWidth, playerHeight, playerWidth),
-      material_create(),
+      material_create()
     ),
-    BODY_DYNAMIC,
+    BODY_DYNAMIC
   );
   playerMesh.position.y += playerHeight / 2;
   playerMesh.visible = false;
@@ -130,7 +130,7 @@ export var map0 = (gl, scene, camera) => {
     var offset = 512;
     var cameraPosition = vec3_applyMatrix4(
       Object.assign(_v0, cameraObject.position),
-      directional.shadow.camera.matrixWorldInverse,
+      directional.shadow.camera.matrixWorldInverse
     );
     Object.assign(directional.shadow.camera, {
       left: cameraPosition.x - offset,
@@ -146,7 +146,7 @@ export var map0 = (gl, scene, camera) => {
   lightShadow_updateMatrices(directional.shadow, directional);
   updateShadowCamera();
 
-  var createStaticMeshFromGeometry = geometry => {
+  var createStaticMeshFromGeometry = (geometry) => {
     var material = material_create();
     vec3_set(material.color, 0.7, 0.7, 0.75);
     var mesh = physics_add(mesh_create(geometry, material), BODY_STATIC);
@@ -161,8 +161,8 @@ export var map0 = (gl, scene, camera) => {
   ].map(([dimensions, position, transforms = [align(ny)]]) =>
     vec3_set(
       createStaticMeshFromGeometry(box(dimensions, ...transforms)).position,
-      ...position,
-    ),
+      ...position
+    )
   );
 
   // Platforms
@@ -211,8 +211,8 @@ export var map0 = (gl, scene, camera) => {
   ].map(([dimensions, position]) =>
     vec3_set(
       createStaticMeshFromGeometry(platform_create(...dimensions)).position,
-      ...position,
-    ),
+      ...position
+    )
   );
 
   // Bridges.
@@ -220,18 +220,18 @@ export var map0 = (gl, scene, camera) => {
     // [[0, 52, -240], [192, 52, -240], 64, 8]
   ].map(([start, end, width, height]) =>
     createStaticMeshFromGeometry(
-      bridge_create(vec3_create(...start), vec3_create(...end), width, height),
-    ),
+      bridge_create(vec3_create(...start), vec3_create(...end), width, height)
+    )
   );
 
   // Columns.
   spaceBetween(256, 0, 4)
-    .map(z => [-340, 0, z])
-    .map(position =>
+    .map((z) => [-340, 0, z])
+    .map((position) =>
       vec3_set(
         createStaticMeshFromGeometry(column_create(24, 128)).position,
-        ...position,
-      ),
+        ...position
+      )
     );
 
   var starfieldMaterial = material_create();
@@ -239,7 +239,7 @@ export var map0 = (gl, scene, camera) => {
   starfieldMaterial.fog = false;
   object3d_add(
     cameraObject,
-    mesh_create(starfield_create(15360, 512), starfieldMaterial),
+    mesh_create(starfield_create(15360, 512), starfieldMaterial)
   );
 
   var dreadnoughtMaterial = material_create();
@@ -282,7 +282,7 @@ export var map0 = (gl, scene, camera) => {
     var health = initialHealth;
     var hitTimeout;
     var enemyPhysics = get_physics_component(enemy);
-    on(enemy, 'collide', entity => {
+    on(enemy, "collide", (entity) => {
       var entityPhysics = get_physics_component(entity).physics;
       if (entityPhysics === BODY_BULLET) {
         health--;
@@ -292,7 +292,7 @@ export var map0 = (gl, scene, camera) => {
           createExplosion(enemy.position);
           var disintegration = disintegration_create(
             enemyPhysics.boundingBox,
-            16,
+            16
           );
           Object.assign(disintegration.position, enemy.position);
           Object.assign(disintegration.quaternion, enemy.quaternion);
@@ -311,12 +311,12 @@ export var map0 = (gl, scene, camera) => {
     var time = 0;
     return entity_add(
       entity,
-      component_create(dt => {
+      component_create((dt) => {
         time += dt;
         if (time > duration) {
           object3d_remove(entity.parent, entity);
         }
-      }),
+      })
     );
   };
 
@@ -347,7 +347,7 @@ export var map0 = (gl, scene, camera) => {
     vec3_set(bulletMaterial.emissive, 2, 0.5, 0.5);
 
     var bullet = removeAfter_create(
-      physics_add(mesh_create(bulletGeometry, bulletMaterial), BODY_BULLET),
+      physics_add(mesh_create(bulletGeometry, bulletMaterial), BODY_BULLET)
     );
     bullet.castShadow = true;
 
@@ -360,7 +360,7 @@ export var map0 = (gl, scene, camera) => {
     vec3_set(bulletMaterial.emissive, 2, 0.5, 0.5);
 
     var bullet = removeAfter_create(
-      physics_add(mesh_create(bulletGeometry, bulletMaterial), BODY_BULLET),
+      physics_add(mesh_create(bulletGeometry, bulletMaterial), BODY_BULLET)
     );
     bullet.castShadow = true;
 
@@ -371,7 +371,7 @@ export var map0 = (gl, scene, camera) => {
     health -= damage;
     if (health <= 0) {
       document.exitPointerLock();
-      document.querySelector('.e').hidden = false;
+      document.querySelector(".e").hidden = false;
     }
   };
 
@@ -398,7 +398,7 @@ export var map0 = (gl, scene, camera) => {
 
     var mesh = entity_add(
       enemyHealth_create(physics_add(createPhantomMesh(), BODY_DYNAMIC), 5),
-      component_create(dt => {
+      component_create((dt) => {
         if (state === PHANTOM_STATE_NONE && findTarget(mesh, playerMesh)) {
           state === PHANTOM_STATE_ALERT;
         }
@@ -417,7 +417,7 @@ export var map0 = (gl, scene, camera) => {
           quat_setFromAxisAngle(
             _q0,
             vec3_Y,
-            Math.atan2(wishDirection.x, wishDirection.z),
+            Math.atan2(wishDirection.x, wishDirection.z)
           );
           quat_rotateTowards(mesh.quaternion, _q0, Math.PI * dt);
 
@@ -428,7 +428,7 @@ export var map0 = (gl, scene, camera) => {
             Object.assign(positionEnd, positionStart),
             _v1,
             // 16 frames ahead.
-            16 * dt,
+            16 * dt
           );
           if (DEBUG) {
             body_trace(
@@ -436,7 +436,7 @@ export var map0 = (gl, scene, camera) => {
               enemyPhysics,
               trace,
               positionStart,
-              positionEnd,
+              positionEnd
             );
           }
 
@@ -448,7 +448,7 @@ export var map0 = (gl, scene, camera) => {
             enemyPhysics,
             trace,
             positionStart,
-            positionEnd,
+            positionEnd
           );
 
           if (!trace.allsolid) {
@@ -459,7 +459,7 @@ export var map0 = (gl, scene, camera) => {
             var debugMeshes = debugPoints(
               [mesh.position, [0, 1, 0]],
               [positionStart, [0, 1, 0]],
-              [positionEnd, [0, 1, 0]],
+              [positionEnd, [0, 1, 0]]
             );
 
             if (!trace.allsolid) {
@@ -484,7 +484,7 @@ export var map0 = (gl, scene, camera) => {
             vec3_addScaledVector(
               enemyPhysics.velocity,
               wishDirection,
-              accelSpeed,
+              accelSpeed
             );
           }
         }
@@ -501,27 +501,27 @@ export var map0 = (gl, scene, camera) => {
           vec3_multiplyScalar(
             vec3_applyQuaternion(
               Object.assign(bulletPhysics.velocity, vec3_Z),
-              bullet.quaternion,
+              bullet.quaternion
             ),
-            400,
+            400
           );
 
           object3d_add(map, bullet);
 
-          bulletPhysics.collide = entity => {
+          bulletPhysics.collide = (entity) => {
             if (entity.isEnemy) return false;
             if (entity === playerMesh) takeDamage();
             createExplosion(bullet.position);
             object3d_remove(map, bullet);
           };
         }
-      }),
+      })
     );
 
     mesh.isEnemy = true;
     mesh.isPhantom = true;
 
-    on(mesh, 'collide', entity => {
+    on(mesh, "collide", (entity) => {
       if (get_physics_component(entity).physics === BODY_BULLET) {
         state = PHANTOM_STATE_ALERT;
       }
@@ -556,7 +556,7 @@ export var map0 = (gl, scene, camera) => {
 
     var mesh = entity_add(
       enemyHealth_create(physics_add(createScannerMesh(), BODY_DYNAMIC), 2),
-      component_create(dt => {
+      component_create((dt) => {
         if (state === SCANNER_STATE_NONE && findTarget(mesh, playerMesh)) {
           state = SCANNER_STATE_ALERT;
         }
@@ -564,7 +564,7 @@ export var map0 = (gl, scene, camera) => {
         var enemyPhysics = get_physics_component(mesh);
         vec3_multiplyScalar(
           Object.assign(forceVelocity, enemyPhysics.velocity),
-          -0.5,
+          -0.5
         );
 
         var range = getRange(mesh, playerMesh);
@@ -578,7 +578,7 @@ export var map0 = (gl, scene, camera) => {
           quat_setFromAxisAngle(
             _q0,
             vec3_Y,
-            Math.atan2(wishDirection.x, wishDirection.z),
+            Math.atan2(wishDirection.x, wishDirection.z)
           );
           quat_rotateTowards(mesh.quaternion, _q0, Math.PI * dt);
           vec3_setLength(Object.assign(_v1, wishDirection), wishSpeed);
@@ -595,7 +595,7 @@ export var map0 = (gl, scene, camera) => {
             enemyPhysics,
             trace,
             positionStart,
-            positionEnd,
+            positionEnd
           );
 
           if (trace.fraction !== 1) {
@@ -621,7 +621,7 @@ export var map0 = (gl, scene, camera) => {
             vec3_addScaledVector(
               enemyPhysics.velocity,
               wishDirection,
-              accelSpeed,
+              accelSpeed
             );
           }
         }
@@ -637,14 +637,14 @@ export var map0 = (gl, scene, camera) => {
           vec3_multiplyScalar(
             vec3_applyQuaternion(
               Object.assign(bulletPhysics.velocity, vec3_Z),
-              bullet.quaternion,
+              bullet.quaternion
             ),
-            400,
+            400
           );
 
           object3d_add(map, bullet);
 
-          bulletPhysics.collide = entity => {
+          bulletPhysics.collide = (entity) => {
             if (entity.isEnemy) return false;
             if (entity === playerMesh) takeDamage();
             createExplosion(bullet.position);
@@ -653,13 +653,13 @@ export var map0 = (gl, scene, camera) => {
         }
 
         vec3_add(enemyPhysics.velocity, forceVelocity);
-      }),
+      })
     );
 
     mesh.isEnemy = true;
     mesh.isScanner = true;
 
-    on(mesh, 'collide', entity => {
+    on(mesh, "collide", (entity) => {
       if (get_physics_component(entity).physics === BODY_BULLET) {
         state = SCANNER_STATE_ALERT;
       }
@@ -675,8 +675,8 @@ export var map0 = (gl, scene, camera) => {
     entity_add(
       phantomMesh,
       component_create(
-        () => (phantomMesh.position.z = 96 * Math.cos(1e-3 * Date.now())),
-      ),
+        () => (phantomMesh.position.z = 96 * Math.cos(1e-3 * Date.now()))
+      )
     );
     enemyHealth_create(phantomMesh, 10);
 
@@ -686,8 +686,8 @@ export var map0 = (gl, scene, camera) => {
     entity_add(
       scannerMesh,
       component_create(
-        () => (scannerMesh.position.z = 96 * Math.sin(1e-3 * Date.now())),
-      ),
+        () => (scannerMesh.position.z = 96 * Math.sin(1e-3 * Date.now()))
+      )
     );
     enemyHealth_create(scannerMesh, 5);
 
@@ -696,7 +696,7 @@ export var map0 = (gl, scene, camera) => {
     object3d_add(map, enemyMesh);
   }
 
-  var createExplosion = position => {
+  var createExplosion = (position) => {
     var explosion = explosion_create(4);
     Object.assign(explosion.position, position);
     object3d_add(map, explosion);
@@ -714,10 +714,10 @@ export var map0 = (gl, scene, camera) => {
 
   entity_add(
     map,
-    component_create(dt => {
+    component_create((dt) => {
       bodies = physics_bodies(map);
-      staticBodies = bodies.filter(body => body.physics === BODY_STATIC);
-      staticMeshes = staticBodies.map(body => body.parent);
+      staticBodies = bodies.filter((body) => body.physics === BODY_STATIC);
+      staticMeshes = staticBodies.map((body) => body.parent);
       physics_update(bodies);
       player.dt = dt;
 
@@ -737,10 +737,10 @@ export var map0 = (gl, scene, camera) => {
 
       vec3_applyQuaternion(
         vec3_set(player.viewForward, 0, 0, -1),
-        camera.quaternion,
+        camera.quaternion
       );
       vec3_normalize(
-        vec3_cross(vec3_set(player.viewRight, 0, -1, 0), player.viewForward),
+        vec3_cross(vec3_set(player.viewRight, 0, -1, 0), player.viewForward)
       );
 
       player_update(player);
@@ -749,8 +749,8 @@ export var map0 = (gl, scene, camera) => {
       updateShadowCamera();
 
       health = clamp(health + 1 * dt, 0, 100);
-      document.querySelector('.h').textContent = Math.round(health);
-      document.querySelector('.s').textContent = score;
+      document.querySelector(".h").textContent = Math.round(health);
+      document.querySelector(".s").textContent = score;
 
       if (playerMesh.position.y <= -2048) {
         takeDamage(100);
@@ -765,7 +765,7 @@ export var map0 = (gl, scene, camera) => {
 
         var bullet = removeAfter_create(
           physics_add(mesh_create(bulletGeometry, bulletMaterial), BODY_BULLET),
-          4,
+          4
         );
         bullet.castShadow = true;
 
@@ -777,11 +777,11 @@ export var map0 = (gl, scene, camera) => {
               _v0,
               randFloatSpread(1),
               randFloatSpread(1),
-              randFloatSpread(1),
+              randFloatSpread(1)
             ),
             vec3_applyQuaternion(Object.assign(_v1, vec3_Z), camera.quaternion),
-            -16,
-          ),
+            -16
+          )
         );
 
         var bulletPhysics = get_physics_component(bullet);
@@ -789,20 +789,20 @@ export var map0 = (gl, scene, camera) => {
           bulletPhysics.velocity,
           // Object.assign(bulletPhysics.velocity, playerPhysics.velocity),
           vec3_applyQuaternion(Object.assign(_v0, vec3_Z), bullet.quaternion),
-          800,
+          800
         );
 
         vec3_add(
           vec3_applyQuaternion(
             vec3_set(bullet.position, playerWidth / 4, -playerHeight / 8, 0),
-            camera.quaternion,
+            camera.quaternion
           ),
-          playerMesh.position,
+          playerMesh.position
         );
 
         object3d_add(map, bullet);
 
-        bulletPhysics.collide = entity => {
+        bulletPhysics.collide = (entity) => {
           if (entity === playerMesh) return false;
           createExplosion(bullet.position);
           object3d_remove(map, bullet);
@@ -817,7 +817,7 @@ export var map0 = (gl, scene, camera) => {
           phantomEnemyMesh.position,
           randFloat(-160, 150),
           randFloat(128, 32),
-          randFloat(-512, -640),
+          randFloat(-512, -640)
         );
         object3d_add(map, phantomEnemyMesh);
       }
@@ -828,29 +828,29 @@ export var map0 = (gl, scene, camera) => {
           scannerEnemyMesh.position,
           randFloat(-160, 160),
           randFloat(128, 32),
-          randFloat(-512, -720),
+          randFloat(-512, -720)
         );
         object3d_add(map, scannerEnemyMesh);
       }
-    }),
+    })
   );
 
-  addEventListener('mousedown', () => (isMouseDown = true));
-  addEventListener('mouseup', () => (isMouseDown = false));
+  addEventListener("mousedown", () => (isMouseDown = true));
+  addEventListener("mouseup", () => (isMouseDown = false));
 
   if (DEBUG) {
-    addEventListener('click', () => {
+    addEventListener("click", () => {
       var ray = ray_create();
       Object.assign(ray.origin, cameraObject.position);
       vec3_applyQuaternion(
         vec3_set(ray.direction, 0, 0, -1),
-        camera.quaternion,
+        camera.quaternion
       );
-      var staticMeshes = staticBodies?.map(body => body.parent) || [];
+      var staticMeshes = staticBodies?.map((body) => body.parent) || [];
       staticMeshes = [];
       object3d_traverse(
         map,
-        object => object.geometry && staticMeshes.push(object),
+        (object) => object.geometry && staticMeshes.push(object)
       );
       var intersection = ray_intersectObjects(ray, staticMeshes)?.[0];
       if (intersection) {
@@ -860,7 +860,7 @@ export var map0 = (gl, scene, camera) => {
             intersection.point.y,
             intersection.point.z,
           ].map(Math.round),
-          { distance: Math.round(intersection.distance) },
+          { distance: Math.round(intersection.distance) }
         );
         var targetMaterial = material_create();
         vec3_set(targetMaterial.emissive, 0, 1, 0);

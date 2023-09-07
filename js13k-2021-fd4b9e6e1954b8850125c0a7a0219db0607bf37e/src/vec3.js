@@ -31,7 +31,7 @@ export var vec3_setZ = (v, z) => {
   return v;
 };
 
-export var vec3_clone = v => vec3_create(v.x, v.y, v.z);
+export var vec3_clone = (v) => vec3_create(v.x, v.y, v.z);
 
 export var vec3_add = (a, b) => {
   a.x += b.x;
@@ -147,14 +147,14 @@ export var vec3_max = (a, b) => {
   return a;
 };
 
-export var vec3_round = v => {
+export var vec3_round = (v) => {
   v.x = Math.round(v.x);
   v.y = Math.round(v.y);
   v.z = Math.round(v.z);
   return v;
 };
 
-export var vec3_negate = v => {
+export var vec3_negate = (v) => {
   v.x = -v.x;
   v.y = -v.y;
   v.z = -v.z;
@@ -163,9 +163,9 @@ export var vec3_negate = v => {
 
 export var vec3_dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
 
-export var vec3_length = v => Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+export var vec3_length = (v) => Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 
-export var vec3_normalize = v => vec3_divideScalar(v, vec3_length(v) || 1);
+export var vec3_normalize = (v) => vec3_divideScalar(v, vec3_length(v) || 1);
 
 export var vec3_setLength = (v, length) =>
   vec3_multiplyScalar(vec3_normalize(v), length);
@@ -211,10 +211,7 @@ export var vec3_reflect = (v, normal) =>
   // normal is assumed to have unit length
   vec3_sub(
     v,
-    vec3_multiplyScalar(
-      Object.assign(_vector, normal),
-      2 * vec3_dot(v, normal),
-    ),
+    vec3_multiplyScalar(Object.assign(_vector, normal), 2 * vec3_dot(v, normal))
   );
 
 export var vec3_distanceTo = (a, b) => Math.sqrt(vec3_distanceToSquared(a, b));

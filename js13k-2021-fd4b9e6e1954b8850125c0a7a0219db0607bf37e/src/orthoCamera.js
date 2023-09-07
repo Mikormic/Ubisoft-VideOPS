@@ -1,6 +1,6 @@
-import { mat4_create } from './mat4.js';
-import { object3d_create } from './object3d.js';
-import { vec3_clone, vec3_Y } from './vec3.js';
+import { mat4_create } from "./mat4.js";
+import { object3d_create } from "./object3d.js";
+import { vec3_clone, vec3_Y } from "./vec3.js";
 
 export var orthoCamera_create = (
   left = -1,
@@ -8,7 +8,7 @@ export var orthoCamera_create = (
   top = 1,
   bottom = -1,
   near = 0.1,
-  far = 2000,
+  far = 2000
 ) => {
   var camera = {
     ...object3d_create(),
@@ -28,7 +28,7 @@ export var orthoCamera_create = (
   return camera;
 };
 
-export var orthoCamera_updateProjectionMatrix = camera => {
+export var orthoCamera_updateProjectionMatrix = (camera) => {
   var { left, right, top, bottom, near, far } = camera;
 
   var w = 1 / (right - left);

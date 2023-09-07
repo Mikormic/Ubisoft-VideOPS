@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies & run tests for behind-asteroids
         working-directory: ./behind-asteroids-3ce49e995ffd50ff506ec010dd71257f0040f91a
         run: npm install && npx jest
-      - name: Install dependencies & run tests for js13k-2021-fd4b9e6e1954b8850125c0a7a0219db0607bf37e
+      - name: Install dependencies & run tests & run linter for js13k-2021-fd4b9e6e1954b8850125c0a7a0219db0607bf37e
         working-directory: ./js13k-2021-fd4b9e6e1954b8850125c0a7a0219db0607bf37e
-        run: npm install && npx jest
+        run: npm install && npx jest && npx eslint ./src
         

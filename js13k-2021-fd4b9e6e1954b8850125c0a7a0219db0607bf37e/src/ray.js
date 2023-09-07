@@ -1,4 +1,4 @@
-import { mat4_create, mat4_invert } from './mat4.js';
+import { mat4_create, mat4_invert } from "./mat4.js";
 import {
   vec3_add,
   vec3_applyMatrix4,
@@ -11,7 +11,7 @@ import {
   vec3_multiplyScalar,
   vec3_subVectors,
   vec3_transformDirection,
-} from './vec3.js';
+} from "./vec3.js";
 
 var _diff = vec3_create();
 
@@ -26,7 +26,7 @@ var _intersectionPoint = vec3_create();
 
 export var ray_create = (
   origin = vec3_create(),
-  direction = vec3_create(),
+  direction = vec3_create()
 ) => ({
   origin,
   direction,
@@ -41,7 +41,7 @@ export var ray_copy = (a, b) => {
 export var ray_at = (ray, t, target = vec3_create()) =>
   vec3_add(
     vec3_multiplyScalar(Object.assign(target, ray.direction), t),
-    ray.origin,
+    ray.origin
   );
 
 export var ray_intersectBox = (ray, box, target) => {
@@ -93,7 +93,7 @@ export var ray_intersectTriangle = (ray, a, b, c, target) => {
   vec3_crossVectors(
     _normal,
     vec3_subVectors(_edge1, b, a),
-    vec3_subVectors(_edge2, c, a),
+    vec3_subVectors(_edge2, c, a)
   );
 
   // Solve Q + t*D = b1*E1 + b2*E2 (Q = kDiff, D = ray direction,
@@ -193,5 +193,5 @@ export var ray_applyMatrix4 = (r, m) => {
 
 export var ray_intersectObjects = (ray, objects) =>
   objects
-    .flatMap(object => ray_intersectMesh(ray, object))
+    .flatMap((object) => ray_intersectMesh(ray, object))
     .sort((a, b) => a.distance - b.distance);
