@@ -1,4 +1,4 @@
-const randomAsteroidShape = require('../asteroids').default;
+const randomAsteroidShape = require("../asteroids");
 
 describe(
     'test randomAsteroidShape', ()=>{

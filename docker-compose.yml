@@ -16,6 +16,11 @@ services:
     volumes:
       - db:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
   # api:
   #   build: ./api
   #   ports:
@@ -27,7 +32,7 @@ services:
   behindasteroids:
     build: ./behind-asteroids-3ce49e995ffd50ff506ec010dd71257f0040f91a
     ports:
-      - '4243:8080'
+      - '4243:3000'
   js13k:
     build: ./js13k-2021-fd4b9e6e1954b8850125c0a7a0219db0607bf37e
     ports:
