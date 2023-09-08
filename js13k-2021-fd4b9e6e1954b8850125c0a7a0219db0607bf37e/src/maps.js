@@ -341,18 +341,18 @@ export var map0 = (gl, scene, camera) => {
       return target;
     });
 
-  var fireShipBullet = () => {
-    var bulletGeometry = boxGeom_create(16, 16, 48);
-    var bulletMaterial = material_create();
-    vec3_set(bulletMaterial.emissive, 2, 0.5, 0.5);
+  // var fireShipBullet = () => {
+  //   var bulletGeometry = boxGeom_create(16, 16, 48);
+  //   var bulletMaterial = material_create();
+  //   vec3_set(bulletMaterial.emissive, 2, 0.5, 0.5);
 
-    var bullet = removeAfter_create(
-      physics_add(mesh_create(bulletGeometry, bulletMaterial), BODY_BULLET)
-    );
-    bullet.castShadow = true;
+  //   var bullet = removeAfter_create(
+  //     physics_add(mesh_create(bulletGeometry, bulletMaterial), BODY_BULLET)
+  //   );
+  //   bullet.castShadow = true;
 
-    return bullet;
-  };
+  //   return bullet;
+  // };
 
   var fireEnemyBullet = () => {
     var bulletGeometry = boxGeom_create(2, 2, 8);
@@ -377,10 +377,10 @@ export var map0 = (gl, scene, camera) => {
 
   var createPhantomEnemy = () => {
     var PHANTOM_STATE_NONE = 0;
-    var PHANTOM_STATE_IDLE = 1;
+    // var PHANTOM_STATE_IDLE = 1;
     var PHANTOM_STATE_ALERT = 2;
-    var PHANTOM_STATE_SHOOT = 3;
-    var PHANTOM_STATE_MELEE = 4;
+    // var PHANTOM_STATE_SHOOT = 3;
+    // var PHANTOM_STATE_MELEE = 4;
 
     var PHANTOM_Y = 52;
 
@@ -532,9 +532,9 @@ export var map0 = (gl, scene, camera) => {
 
   var createScannerEnemy = () => {
     var SCANNER_STATE_NONE = 0;
-    var SCANNER_STATE_IDLE = 1;
+    // var SCANNER_STATE_IDLE = 1;
     var SCANNER_STATE_ALERT = 2;
-    var SCANNER_STATE_SHOOT = 2;
+    // var SCANNER_STATE_SHOOT = 2;
 
     var state = SCANNER_STATE_NONE;
     var forceVelocity = vec3_create();
@@ -703,11 +703,11 @@ export var map0 = (gl, scene, camera) => {
   };
 
   var bulletInterval = interval_create(0.1);
-  var shipBulletInterval = interval_create(5);
+  // var shipBulletInterval = interval_create(5);
 
   var bodies;
   var staticBodies;
-  var staticMeshes;
+  // var staticMeshes;
 
   var phantomSpawnInterval = interval_create(7);
   var scannerSpawnInterval = interval_create(3);
@@ -717,7 +717,7 @@ export var map0 = (gl, scene, camera) => {
     component_create((dt) => {
       bodies = physics_bodies(map);
       staticBodies = bodies.filter((body) => body.physics === BODY_STATIC);
-      staticMeshes = staticBodies.map((body) => body.parent);
+      // staticMeshes = staticBodies.map((body) => body.parent);
       physics_update(bodies);
       player.dt = dt;
 

@@ -3,7 +3,7 @@ import mysql from 'mysql';
 function connectToDatabase() {
 
     const connection = mysql.createConnection({
-        host: 'host.docker.internal',
+        host: 'db',
         user: 'user',
         password: 'password',
         database: 'devops',
