@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #6D5858;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+nav{
+  background-color: #FFEDDD;
+  color: black;
+  padding: 1% 0;
+}
+h2{
+  margin: 3% 0;
+  color: #FFEDDD;
+  font-size: 110%;
+  font-weight: bold;
+}
+.games{
+  margin-top: 10%;
+  display: flex;
+  justify-content: space-around;
+}
+.game1{
+  margin-bottom: 10%;
+}
+.game2{
+  margin-bottom: 10%;
+}
+.game3{
+  margin-bottom: 10%;
+}
