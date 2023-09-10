@@ -300,7 +300,7 @@ const distRoadrollerAdvzip = gulp.series(
   roadroller,
   html,
   compress,
-  compressAdvzip,
+  compressAdvzip
 );
 
 export { js, build, dist, distAdvzip, distRoadrollerAdvzip };

@@ -25,18 +25,38 @@ app.get("/", (req, res) => {
 
     connection.end()
 });
-
-app.post("/highscore", (req, res) => {
+//get highscores
+app.get("/highscores", (req, res) => {
+    const connection = connectToDatabase();
+    const { game } = req.query;
+    connection.connect()
+    connection.query(`SELECT * FROM highscores WHERE game_id=${game};`, (err, rows, fields) => {
+        if (err) throw err
+        res.send(rows);
+    })
+    connection.end()
+});
+//add a score
+app.post("/highscores", (req, res) => {
     const { name, score, game } = req.body;
+    console.log(req.body);
+    if (name === undefined) {
+        name = "Anonymous";
+    }
     console.log(name, score);
     const connection = connectToDatabase();
     connection.connect()
-    connection.query(`INSERT INTO highscores (name, score) VALUES ('${name}', ${score})`, (err, rows, fields) => {
+    connection.query(`INSERT INTO highscores (name, score, game_id) VALUES ('${name}', ${score}, ${game})`, (err, rows, fields) => {
         if (err) throw err
-        console.log(rows);
+    })
+    connection.query(`SELECT * FROM highscores WHERE game_id=${game}`, (err, rows, fields) => {
+        if (err) throw err
+        Array.isArray(rows) && rows.forEach((row) => {
+            console.log(`${row.name} has a score of ${row.score}`);
+        });
+        res.status(200).json(rows);
     })
     connection.end()
-    res.send("Highscore added!");
 });
 
 

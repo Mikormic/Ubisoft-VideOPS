@@ -8,6 +8,7 @@ import { light_create } from "./directionalLight.js";
 import { lightShadow_updateMatrices } from "./directionalLightShadow.js";
 import { component_create, entity_add } from "./entity.js";
 import { on } from "./events.js";
+import { addHighScore } from "./highscores/queries.js";
 import { interval_create } from "./interval.js";
 import { keys_create } from "./keys.js";
 import { material_create } from "./material.js";
@@ -85,7 +86,6 @@ var isMouseDown = false;
 var _q0 = quat_create();
 var _v0 = vec3_create();
 var _v1 = vec3_create();
-
 export var map0 = (gl, scene, camera) => {
   var map = object3d_create();
   object3d_add(scene, map);
@@ -119,7 +119,7 @@ export var map0 = (gl, scene, camera) => {
   object3d_add(map, playerMesh);
 
   var playerPhysics = get_physics_component(playerMesh);
-  playerPhysics.update = () => {};
+  playerPhysics.update = () => { };
   var player = player_create(playerMesh, playerPhysics);
   player.scene = map;
 
@@ -370,9 +370,45 @@ export var map0 = (gl, scene, camera) => {
   var takeDamage = (damage = 2) => {
     health -= damage;
     if (health <= 0) {
-      document.exitPointerLock();
-      document.querySelector(".e").hidden = false;
+      //TODO: add field to register name
+      console.log("game over");
+      console.log(document.querySelector(".e").style.display);
+      console.log(document.getElementsByTagName("canvas")[0]);
+      document.getElementsByTagName("canvas")[0].remove();
+      if (document.querySelector(".e").style.display == "none") {
+        var name = prompt("Enter your name");
+        if (name == null) {
+          name = "Anonymous";
+        }
+        //game id in db
+        var game = 3;
+        fetch("http://localhost:3000/highscores", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, score, game }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            document.querySelector(".e").style.display = "block";
+            // Create the ordered list dynamically
+            var highScoresList = document.createElement("ol");
+            highScoresList.className = "hs1";
+
+            data.slice(0, 3).forEach((score) => {
+              var listItem = document.createElement("li");
+              listItem.textContent = `${score.name} - ${score.score}`;
+              highScoresList.appendChild(listItem);
+            });
+
+            // Append the ordered list to the element with class "hs"
+            document.querySelector(".hs").appendChild(highScoresList);
+          });
+      }
     }
+    console.log(document.querySelector(".e").style.display);
   };
 
   var createPhantomEnemy = () => {
@@ -608,7 +644,7 @@ export var map0 = (gl, scene, camera) => {
         if (
           range !== RANGE_MELEE &&
           vec3_distanceTo(mesh.position, playerMesh.position) >
-            minPlayerDistance
+          minPlayerDistance
         ) {
           var speed = vec3_length(enemyPhysics.velocity);
           var control = Math.max(speed, stopSpeed);

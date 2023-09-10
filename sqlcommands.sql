@@ -10,8 +10,11 @@ CREATE TABLE highscores (
   FOREIGN KEY (game_id) REFERENCES games(id)
 );
 
+ALTER TABLE highscores
+ADD name VARCHAR(10);
 
-INSERT INTO games (name) VALUES ("Behind Asteroids", "Keep white space", "Js13k");
+
+INSERT INTO games (name) VALUES ("Behind Asteroids"), ("Keep white space"), ("Js13k");
 
 INSERT INTO highscores (score, game_id) VALUES (100, 1);
 
