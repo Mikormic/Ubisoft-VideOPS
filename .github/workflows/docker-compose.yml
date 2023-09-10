@@ -1,4 +1,4 @@
-name: unit-tests-workflow
+name: docker compose build
 run-name: ${{github.actor}} is making a pull_request
 on: [pull_request]
 jobs:
