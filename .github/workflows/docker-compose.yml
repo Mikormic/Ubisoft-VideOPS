@@ -1,0 +1,32 @@
+name: unit-tests-workflow
+run-name: ${{github.actor}} is making a pull_request
+on: [pull_request]
+jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-node@v3
+          with:
+            node-version: 'latest'
+        - uses: actions/cache@v2
+          with:
+            path: ~/.npm
+            key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+                ${{ runner.os }}-node-        
+        - name: Install dependencies & run tests for js-game-keep-white-space
+          working-directory: ./js-game-keep-white-space-b5d8b7d35857d4df4a3d85a9fa65aa4217e11757
+          run: npm install && npx jest
+        - name: Install dependencies & run tests for behind-asteroids
+          working-directory: ./behind-asteroids-3ce49e995ffd50ff506ec010dd71257f0040f91a
+          run: npm install && npx jest
+        - name: Install dependencies & run tests & run linter for js13k-2021-fd4b9e6e1954b8850125c0a7a0219db0607bf37e
+          working-directory: ./js13k-2021-fd4b9e6e1954b8850125c0a7a0219db0607bf37e
+          run: npm install && npx jest && npx eslint ./src
+        - name: Test build of docker compose
+          working-directory: ./
+          run: docker-compose up
+        - name: Generate documentation with jsdoc
+          working-directory: ./api
+          run: npm install jsdoc -g && jsdoc ./

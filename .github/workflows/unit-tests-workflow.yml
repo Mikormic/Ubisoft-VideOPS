@@ -1,6 +1,6 @@
 name: unit-tests-workflow
-run-name: ${{github.actor}} is trying to push or merge to ${{github.ref}} at ${{github.repository}}
-on: [push, pull_request]
+run-name: ${{github.actor}} has committed "${{ github.event.head_commit.message }}" on ${{github.ref}}
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,6 +9,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 'latest'
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies & run tests for js-game-keep-white-space
         working-directory: ./js-game-keep-white-space-b5d8b7d35857d4df4a3d85a9fa65aa4217e11757
         run: npm install && npx jest
@@ -18,9 +24,6 @@ jobs:
       - name: Install dependencies & run tests & run linter for js13k-2021-fd4b9e6e1954b8850125c0a7a0219db0607bf37e
         working-directory: ./js13k-2021-fd4b9e6e1954b8850125c0a7a0219db0607bf37e
         run: npm install && npx jest && npx eslint ./src
-      - name: Test build of docker compose
-        working-directory: ./
-        run: docker-compose up
       - name: Generate documentation with jsdoc
         working-directory: ./api
         run: npm install jsdoc -g && jsdoc ./
