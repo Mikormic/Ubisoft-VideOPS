@@ -327,28 +327,3 @@ addEventListener("click", () => {
     animate();
   }
 });
-
-// get highscores
-
-export var getHighscores = async () => {
-  var response = await fetch("http://localhost:3000/highscores");
-  var data = await response.json();
-  console.log(data);
-  document.querySelector("#highscores").innerHTML = data
-    .map((score) => `<li>${score.name}: ${score.score}</li>`)
-    .join("");
-  return data;
-};
-
-export var addHighscore = async (name, score) => {
-  var response = await fetch("http://localhost:3000/highscores", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ name, score }),
-  });
-  var data = await response.json();
-  console.log(data);
-  getHighscores();
-};

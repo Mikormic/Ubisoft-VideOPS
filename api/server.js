@@ -30,7 +30,7 @@ app.get("/highscores", (req, res) => {
     const connection = connectToDatabase();
     const { game } = req.query;
     connection.connect()
-    connection.query(`SELECT * FROM highscores WHERE game_id=${game};`, (err, rows, fields) => {
+    connection.query(`SELECT * FROM highscores WHERE game_id=${game} ORDER BY score DESC;`, (err, rows, fields) => {
         if (err) throw err
         res.send(rows);
     })
@@ -49,7 +49,7 @@ app.post("/highscores", (req, res) => {
     connection.query(`INSERT INTO highscores (name, score, game_id) VALUES ('${name}', ${score}, ${game})`, (err, rows, fields) => {
         if (err) throw err
     })
-    connection.query(`SELECT * FROM highscores WHERE game_id=${game}`, (err, rows, fields) => {
+    connection.query(`SELECT * FROM highscores WHERE game_id=${game} ORDER BY score DESC`, (err, rows, fields) => {
         if (err) throw err
         Array.isArray(rows) && rows.forEach((row) => {
             console.log(`${row.name} has a score of ${row.score}`);

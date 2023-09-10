@@ -8,7 +8,6 @@ import { light_create } from "./directionalLight.js";
 import { lightShadow_updateMatrices } from "./directionalLightShadow.js";
 import { component_create, entity_add } from "./entity.js";
 import { on } from "./events.js";
-import { addHighScore } from "./highscores/queries.js";
 import { interval_create } from "./interval.js";
 import { keys_create } from "./keys.js";
 import { material_create } from "./material.js";
@@ -119,7 +118,7 @@ export var map0 = (gl, scene, camera) => {
   object3d_add(map, playerMesh);
 
   var playerPhysics = get_physics_component(playerMesh);
-  playerPhysics.update = () => { };
+  playerPhysics.update = () => {};
   var player = player_create(playerMesh, playerPhysics);
   player.scene = map;
 
@@ -644,7 +643,7 @@ export var map0 = (gl, scene, camera) => {
         if (
           range !== RANGE_MELEE &&
           vec3_distanceTo(mesh.position, playerMesh.position) >
-          minPlayerDistance
+            minPlayerDistance
         ) {
           var speed = vec3_length(enemyPhysics.velocity);
           var control = Math.max(speed, stopSpeed);

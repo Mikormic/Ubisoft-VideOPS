@@ -10,9 +10,9 @@ export const Accueil = () => {
         <h1>PROJET UBISOFT</h1>
       </nav>
       <main>
-        <div className="games">
+        <div className="games flex flex-wrap">
           <div className="game1">
-            <div className="card w-96 glass">
+            <div className="card w-96 min-h-full glass">
               <h2>BEHIND ASTEROIDS</h2>
               <figure>
                 <img
@@ -21,14 +21,14 @@ export const Accueil = () => {
                 />
               </figure>
               <div className="card-body">
-                <div className="card-actions justify-end">
-                <Link to={`/Behind-Asteroids`}><button className="btn btn-success">Play NOW !</button></Link>
+                <div className="card-actions  justify-end">
+                <Link to={`/Behind-Asteroids`}><button className="btn btn-success">Details</button></Link>
                 </div>
               </div>
             </div>
           </div>
           <div className="game2">
-            <div className="card w-96 glass">
+            <div className="card w-96 min-h-full glass">
               <h2>WHITE SPACE</h2>
               <figure>
                 <img
@@ -38,13 +38,13 @@ export const Accueil = () => {
               </figure>
               <div className="card-body">
                 <div className="card-actions justify-end">
-                <Link to={`/White-Space`}><button className="btn btn-success">Play NOW !</button></Link>
+                <Link to={`/White-Space`}><button className="btn btn-success">Details</button></Link>
                 </div>
               </div>
             </div>
           </div>
           <div className="game3">
-            <div className="card w-96 glass">
+            <div className="card w-96 min-h-full glass">
               <h2>13K 2023</h2>
               <figure>
                 <img
@@ -54,7 +54,7 @@ export const Accueil = () => {
               </figure>
               <div className="card-body">
                 <div className="card-actions justify-end">
-                <Link to={`/13k-2023`}><button className="btn btn-success">Play NOW !</button></Link>
+                <Link to={`/13k-2023`}><button className="btn btn-success">Details</button></Link>
                 </div>
               </div>
             </div>
