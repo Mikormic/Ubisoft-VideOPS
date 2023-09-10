@@ -1,5 +1,8 @@
 import mysql from 'mysql';
 
+/** 
+*connect to the db service in docker-compose.yml
+*/
 function connectToDatabase() {
 
     const connection = mysql.createConnection({

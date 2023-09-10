@@ -1,6 +1,15 @@
-import connectToDatabase from "./db-connection.js";
+import mysql from 'mysql';
 
-const connection = connectToDatabase();
+
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'user',
+    password: 'password',
+    database: 'devops',
+})
+
+
 connection.connect();
 
 connection.query('DROP TABLE IF EXISTS highscores;', (err, rows, fields) => {
