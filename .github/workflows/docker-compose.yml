@@ -14,7 +14,8 @@ jobs:
             path: ~/.npm
             key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
             restore-keys: |
-                ${{ runner.os }}-node-        
+                ${{ runner.os }}-node-
+        - uses: docker/setup-buildx-action@v1      
         - name: Install dependencies & run tests for js-game-keep-white-space
           working-directory: ./js-game-keep-white-space-b5d8b7d35857d4df4a3d85a9fa65aa4217e11757
           run: npm install && npx jest
