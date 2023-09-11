@@ -1,6 +1,6 @@
-import { box3_getCenter, box3_getSize } from './box3.js';
-import { colors, faceColors } from './boxColors.js';
-import { boxGeom_create } from './boxGeom.js';
+import { box3_getCenter, box3_getSize } from "./box3.js";
+import { colors, faceColors } from "./boxColors.js";
+import { boxGeom_create } from "./boxGeom.js";
 import {
   all,
   face_nx,
@@ -32,7 +32,7 @@ import {
   py_nz,
   py_pz,
   pz,
-} from './boxIndices.js';
+} from "./boxIndices.js";
 import {
   $scale,
   $translate,
@@ -42,22 +42,22 @@ import {
   deleteFaces,
   extrude,
   relativeAlign,
-} from './boxTransforms.js';
-import { DEBUG, gravity } from './constants.js';
-import { component_create, entity_add } from './entity.js';
-import { geom_applyQuaternion, geom_create, merge, translate } from './geom.js';
-import { mat4_create, mat4_lookAt, mat4_setPosition } from './mat4.js';
-import { material_create } from './material.js';
-import { randFloat, randFloatSpread } from './math.js';
-import { mesh_create } from './mesh.js';
+} from "./boxTransforms.js";
+import { DEBUG, gravity } from "./constants.js";
+import { component_create, entity_add } from "./entity.js";
+import { geom_applyQuaternion, geom_create, merge, translate } from "./geom.js";
+import { mat4_create, mat4_lookAt, mat4_setPosition } from "./mat4.js";
+import { material_create } from "./material.js";
+import { randFloat, randFloatSpread } from "./math.js";
+import { mesh_create } from "./mesh.js";
 import {
   object3d_add,
   object3d_create,
   object3d_lookAt,
   object3d_remove,
-} from './object3d.js';
-import { quat_create, quat_setFromEuler } from './quat.js';
-import { flow, sample } from './utils.js';
+} from "./object3d.js";
+import { quat_create, quat_setFromEuler } from "./quat.js";
+import { flow, sample } from "./utils.js";
 import {
   vec3_add,
   vec3_addScaledVector,
@@ -74,7 +74,7 @@ import {
   vec3_setScalar,
   vec3_subVectors,
   vec3_Y,
-} from './vec3.js';
+} from "./vec3.js";
 
 var EPSILON = 1e-2;
 
@@ -97,34 +97,34 @@ export var bridge_create = (start, end, width, height) => {
   var dz = _vector.z;
 
   if (DEBUG && (dx < 0 || dz < 0)) {
-    throw new Error('bridge_create: start is after end');
+    throw new Error("bridge_create: start is after end");
   }
 
   return box(
     dx ? [dx, height, width] : [width, height, dz],
     align(dx ? nx_py : py_nz),
-    translate(start.x, start.y, start.z),
+    translate(start.x, start.y, start.z)
   );
 };
 
 export var column_create = (
   columnWidth,
   columnHeight,
-  columnDepth = columnWidth,
+  columnDepth = columnWidth
 ) => {
   var base = box(
     [columnDepth, (3 / 16) * columnHeight, columnWidth],
-    align(ny),
+    align(ny)
   );
   var middle = flow(
     () => extrude(base, py, { y: (3 / 4) * columnHeight }),
     $translateX([px_py, -columnDepth / 2]),
-    deleteFaces(face_ny),
+    deleteFaces(face_ny)
   )();
   var top = flow(
     () => extrude(middle, py, { y: (1 / 16) * columnHeight }),
     $translateX([px_py, -columnDepth / 2]),
-    deleteFaces(face_ny),
+    deleteFaces(face_ny)
   )();
 
   return mergeAll(base, middle, top);
@@ -151,23 +151,23 @@ export var disintegration_create = (boundingBox, count) => {
       sprite.scale,
       randFloat(4, size.x),
       randFloat(4, 2 * size.y),
-      randFloat(4, size.z),
+      randFloat(4, size.z)
     );
     vec3_set(
       sprite.position,
       randFloatSpread(0.5),
       randFloatSpread(0.5),
-      randFloatSpread(0.5),
+      randFloatSpread(0.5)
     );
     var spriteCore = mesh_create(
       disintegrationGeometry,
-      disintegrationCoreMaterial,
+      disintegrationCoreMaterial
     );
     vec3_set(
       spriteCore.scale,
       1 - strokeWidth / sprite.scale.x,
       1 - strokeWidth / sprite.scale.y,
-      1 - strokeWidth / sprite.scale.z,
+      1 - strokeWidth / sprite.scale.z
     );
     sprite.scale.x *= -1;
     object3d_add(sprite, spriteCore);
@@ -178,7 +178,7 @@ export var disintegration_create = (boundingBox, count) => {
 
   return entity_add(
     disintegration,
-    component_create(dt => {
+    component_create((dt) => {
       var visibleCount = 0;
 
       disintegration.children.map((sprite, index) => {
@@ -193,7 +193,7 @@ export var disintegration_create = (boundingBox, count) => {
       if (!visibleCount) {
         object3d_remove(disintegration.parent, disintegration);
       }
-    }),
+    })
   );
 };
 
@@ -217,17 +217,17 @@ export var dreadnought_create = () => {
     align(px),
     $translateX([nx_pz, slopeWidth], [all, -sideGap / 2]),
     $translate([ny_pz, { y: deckHeight }]),
-    deleteFaces(face_py),
+    deleteFaces(face_py)
   );
   var frontRightCenter = flow(
     () => extrude(frontRightDeck, py, { y: centerHeight }),
     $translate([nx_nz, { x: slopeWidth }], [py_pz, { y: -centerHeight }]),
-    deleteFaces(face_nx, face_ny),
+    deleteFaces(face_nx, face_ny)
   )();
   var frontRightSlope = flow(
     () => extrude(frontRightCenter, nx, { x: -slopeWidth }),
     $translate([nx_pz, { x: slopeWidth }], [nx_py_nz, { y: -centerHeight }]),
-    deleteFaces(face_px, face_ny),
+    deleteFaces(face_px, face_ny)
   )();
 
   var frontLeftDeck = box(
@@ -235,17 +235,17 @@ export var dreadnought_create = () => {
     align(nx),
     $translateX([px_pz, -slopeWidth], [all, sideGap / 2]),
     $translate([ny_pz, { y: deckHeight }]),
-    deleteFaces(face_py),
+    deleteFaces(face_py)
   );
   var frontLeftCenter = flow(
     () => extrude(frontLeftDeck, py, { y: centerHeight }),
     $translate([px_nz, { x: -slopeWidth }], [py_pz, { y: -centerHeight }]),
-    deleteFaces(face_px, face_ny),
+    deleteFaces(face_px, face_ny)
   )();
   var frontLeftSlope = flow(
     () => extrude(frontLeftCenter, px, { x: slopeWidth }),
     $translate([px_pz, { x: -slopeWidth }], [px_py_nz, { y: -centerHeight }]),
-    deleteFaces(face_nx, face_ny),
+    deleteFaces(face_nx, face_ny)
   )();
 
   var geom = mergeAll(
@@ -260,9 +260,9 @@ export var dreadnought_create = () => {
       align(ny_pz),
       $translate(
         [all, { z: -frontLength / 3 }],
-        [py_nz, { y: -coreHeight / 3 }],
-      ),
-    ),
+        [py_nz, { y: -coreHeight / 3 }]
+      )
+    )
   );
 
   return mergeAll(
@@ -270,9 +270,9 @@ export var dreadnought_create = () => {
     greeble_create(geom, 2048, () =>
       box(
         [randFloat(16, 128), randFloat(16, 128), randFloat(16, 64)],
-        align(pz),
-      ),
-    ),
+        align(pz)
+      )
+    )
   );
 };
 
@@ -281,14 +281,14 @@ var explosionMaterials = [
   [1, 1, 1],
   [1, 0.75, 0],
   [1, 0.5, 0],
-].map(color => {
+].map((color) => {
   var material = material_create();
   vec3_set(material.color, ...color);
   vec3_set(material.emissive, ...color);
   return material;
 });
 
-export var explosion_create = count => {
+export var explosion_create = (count) => {
   var explosion = object3d_create();
   var decay = 8;
 
@@ -300,12 +300,12 @@ export var explosion_create = count => {
       sprite.position,
       randFloatSpread(4),
       randFloatSpread(4),
-      randFloatSpread(4),
+      randFloatSpread(4)
     );
     object3d_add(explosion, sprite);
     var velocity = vec3_setLength(
       vec3_clone(sprite.position),
-      randFloat(64, 128),
+      randFloat(64, 128)
     );
     object3d_lookAt(sprite, velocity);
     return velocity;
@@ -313,14 +313,14 @@ export var explosion_create = count => {
 
   return entity_add(
     explosion,
-    component_create(dt => {
+    component_create((dt) => {
       var visibleCount = 0;
 
       explosion.children.map((sprite, index) => {
         vec3_addScaledVector(
           sprite.position,
           vec3_addScaledVector(velocities[index], gravity, dt),
-          dt,
+          dt
         );
         vec3_multiplyScalar(sprite.scale, 1 - decay * dt);
 
@@ -332,7 +332,7 @@ export var explosion_create = count => {
       if (!visibleCount) {
         object3d_remove(explosion.parent, explosion);
       }
-    }),
+    })
   );
 };
 
@@ -344,12 +344,12 @@ export var greeble_create = (() => {
 
   var triangle_getArea = (a, b, c) =>
     vec3_length(
-      vec3_cross(vec3_subVectors(_v0, c, b), vec3_subVectors(_v1, a, b)),
+      vec3_cross(vec3_subVectors(_v0, c, b), vec3_subVectors(_v1, a, b))
     ) * 0.5;
 
   var triangle_getNormal = (a, b, c) =>
     vec3_normalize(
-      vec3_cross(vec3_subVectors(_v0, c, b), vec3_subVectors(_v1, a, b)),
+      vec3_cross(vec3_subVectors(_v0, c, b), vec3_subVectors(_v1, a, b))
     );
 
   var randomPointInTriangle = (vA, vB, vC) => {
@@ -367,25 +367,25 @@ export var greeble_create = (() => {
       vec3_addScaledVector(
         vec3_addScaledVector(vec3_setScalar(_vector, 0), vA, a),
         vB,
-        b,
+        b
       ),
       vC,
-      c,
+      c
     );
   };
 
   return (geom, count, fn) => {
     var totalArea = 0;
-    var cumulativeAreas = geom.faces.map(face => {
+    var cumulativeAreas = geom.faces.map((face) => {
       totalArea += triangle_getArea(
         geom.vertices[face.a],
         geom.vertices[face.b],
-        geom.vertices[face.c],
+        geom.vertices[face.c]
       );
       return totalArea;
     });
 
-    var binarySearch = x => {
+    var binarySearch = (x) => {
       var start = 0;
       var end = cumulativeAreas.length - 1;
 
@@ -421,9 +421,9 @@ export var greeble_create = (() => {
         mat4_setPosition(mat4_lookAt(_matrix, origin, normal, vec3_Y), point);
 
         var greeble = fn();
-        greeble.vertices.map(vertex => vec3_applyMatrix4(vertex, _matrix));
+        greeble.vertices.map((vertex) => vec3_applyMatrix4(vertex, _matrix));
         return greeble;
-      }),
+      })
     );
   };
 })();
@@ -450,8 +450,8 @@ export var phantom_create = () => {
       [py_pz, { z: -depth }],
       [px_ny_pz, { x: -width / 2 }],
       [nx_ny_pz, { x: width / 2 }],
-      [ny_pz, { y: -2 * gap }],
-    ),
+      [ny_pz, { y: -2 * gap }]
+    )
   );
   var rightSide = box(
     [sideWidth, sideHeight, depth],
@@ -461,8 +461,8 @@ export var phantom_create = () => {
       [nx_ny, { x: sideWidth }],
       [px_py, { y: -2 * gap }],
       [ny_pz, { z: -depth }],
-      [nx_py_pz, { z: -depth }],
-    ),
+      [nx_py_pz, { z: -depth }]
+    )
   );
   var leftSide = box(
     [sideWidth, sideHeight, depth],
@@ -472,22 +472,22 @@ export var phantom_create = () => {
       [px_ny, { x: -sideWidth }],
       [nx_py, { y: -2 * gap }],
       [ny_pz, { z: -depth }],
-      [px_py_pz, { z: -depth }],
-    ),
+      [px_py_pz, { z: -depth }]
+    )
   );
 
   var eye = box(
     [eyeSize, eyeSize, eyeSize],
-    geom =>
+    (geom) =>
       geom_applyQuaternion(
         geom,
         quat_setFromEuler(
           _quat,
-          vec3_set(_vector, Math.PI / 4, -Math.PI / 4, 0),
-        ),
+          vec3_set(_vector, Math.PI / 4, -Math.PI / 4, 0)
+        )
       ),
     faceColors([face_px, eyeColor], [face_py, eyeColor], [face_pz, eyeColor]),
-    translate(0, sideHeight - gap / 2, -depth / 4),
+    translate(0, sideHeight - gap / 2, -depth / 4)
   );
 
   return mergeAll(head, rightSide, leftSide, eye);
@@ -500,19 +500,19 @@ export var platform_create = (width, height, depth, strokeWidth) => {
 
   var base = box(
     [width - 2 * strokeWidth, height, innerDepth],
-    deleteSideFaces,
+    deleteSideFaces
   );
   var frontBase = box(
     [innerWidth, height, strokeWidth],
     relativeAlign(nz, base, pz),
     $translateX([nx_nz, -strokeWidth], [px_nz, strokeWidth]),
-    deleteSideFaces,
+    deleteSideFaces
   );
   var backBase = box(
     [innerWidth, height, strokeWidth],
     relativeAlign(pz, base, nz),
     $translateX([nx_pz, -strokeWidth], [px_pz, strokeWidth]),
-    deleteSideFaces,
+    deleteSideFaces
   );
 
   var strokeDimensions = [strokeWidth, height, strokeWidth];
@@ -528,28 +528,28 @@ export var platform_create = (width, height, depth, strokeWidth) => {
       relativeAlign(nz, frontBase, pz),
       $translateX([nx_pz, -halfStrokeWidth], [px_pz, halfStrokeWidth]),
       deleteFaces(face_px, face_nx, face_nz),
-      strokeColor,
+      strokeColor
     ),
     box(
       [innerWidth, height, strokeWidth],
       relativeAlign(pz, backBase, nz),
       $translateX([nx_nz, -halfStrokeWidth], [px_nz, halfStrokeWidth]),
       deleteFaces(face_px, face_nx, face_pz),
-      strokeColor,
+      strokeColor
     ),
     box(
       [strokeWidth, height, innerDepth],
       relativeAlign(nx, base, px),
       $translateZ([px_nz, -halfStrokeWidth], [px_pz, halfStrokeWidth]),
       deleteFaces(face_nx, face_pz, face_nz),
-      strokeColor,
+      strokeColor
     ),
     box(
       [strokeWidth, height, innerDepth],
       relativeAlign(px, base, nx),
       $translateZ([nx_nz, -halfStrokeWidth], [nx_pz, halfStrokeWidth]),
       deleteFaces(face_px, face_pz, face_nz),
-      strokeColor,
+      strokeColor
     ),
     box(
       strokeDimensions,
@@ -557,9 +557,9 @@ export var platform_create = (width, height, depth, strokeWidth) => {
       $translate(
         [px, { z: halfStrokeWidth }],
         [pz, { x: -strokeWidth }],
-        [px_pz, { x: -halfStrokeWidth, z: halfStrokeWidth }],
+        [px_pz, { x: -halfStrokeWidth, z: halfStrokeWidth }]
       ),
-      strokeColor,
+      strokeColor
     ),
     box(
       strokeDimensions,
@@ -567,9 +567,9 @@ export var platform_create = (width, height, depth, strokeWidth) => {
       $translate(
         [nx, { z: halfStrokeWidth }],
         [pz, { x: strokeWidth }],
-        [nx_pz, { x: halfStrokeWidth, z: halfStrokeWidth }],
+        [nx_pz, { x: halfStrokeWidth, z: halfStrokeWidth }]
       ),
-      strokeColor,
+      strokeColor
     ),
     box(
       strokeDimensions,
@@ -577,9 +577,9 @@ export var platform_create = (width, height, depth, strokeWidth) => {
       $translate(
         [px, { z: -halfStrokeWidth }],
         [nz, { x: -strokeWidth }],
-        [px_nz, { x: -halfStrokeWidth, z: -halfStrokeWidth }],
+        [px_nz, { x: -halfStrokeWidth, z: -halfStrokeWidth }]
       ),
-      strokeColor,
+      strokeColor
     ),
     box(
       strokeDimensions,
@@ -587,10 +587,10 @@ export var platform_create = (width, height, depth, strokeWidth) => {
       $translate(
         [nx, { z: -halfStrokeWidth }],
         [nz, { x: strokeWidth }],
-        [nx_nz, { x: halfStrokeWidth, z: -halfStrokeWidth }],
+        [nx_nz, { x: halfStrokeWidth, z: -halfStrokeWidth }]
       ),
-      strokeColor,
-    ),
+      strokeColor
+    )
   );
 };
 
@@ -604,7 +604,7 @@ export var scanner_create = () => {
     [size, size, headLength],
     $scale([pz, { x: 0.5, y: 0.5 }]),
     faceColors([face_pz, eyeColor]),
-    deleteFaces(face_nz),
+    deleteFaces(face_nz)
   );
   return geom_applyQuaternion(
     mergeAll(
@@ -614,10 +614,10 @@ export var scanner_create = () => {
         [size, size, length - headLength],
         relativeAlign(pz, head, nz),
         $scale([nz, { x: 0, y: 0 }]),
-        deleteFaces(face_pz),
-      ),
+        deleteFaces(face_pz)
+      )
     ),
-    quat_setFromEuler(_quat, vec3_set(_vector, 0, 0, Math.PI / 4)),
+    quat_setFromEuler(_quat, vec3_set(_vector, 0, 0, Math.PI / 4))
   );
 };
 
@@ -636,9 +636,9 @@ export var starfield_create = (radius, count) => {
         translate(
           radius * v * Math.cos(theta),
           radius * v * Math.sin(theta),
-          radius * u,
-        ),
-      ),
+          radius * u
+        )
+      )
     );
   }
 
@@ -651,6 +651,6 @@ export var healthPack_create = () => {
   return translate(
     0,
     size,
-    0,
+    0
   )(mergeAll(box([size / 3, size, depth]), box([size, size / 3, depth])));
 };

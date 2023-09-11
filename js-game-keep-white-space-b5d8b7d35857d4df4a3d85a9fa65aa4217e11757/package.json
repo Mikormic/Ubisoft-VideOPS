@@ -38,5 +38,8 @@
     "rollup": "2.56.3",
     "through2": "4.0.2",
     "vite": "2.5.6"
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
   }
 }

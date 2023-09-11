@@ -1,19 +1,19 @@
 /* global canvas */
 
-import { bufferGeom_fromGeom } from './bufferGeom.js';
-import { camera_create, camera_updateProjectionMatrix } from './camera.js';
-import { controls_create } from './controls.js';
-import { lightShadow_updateMatrices } from './directionalLightShadow.js';
-import { entity_update } from './entity.js';
-import { map0 } from './maps.js';
-import { mat4_invert, mat4_multiplyMatrices } from './mat4.js';
+import { bufferGeom_fromGeom } from "./bufferGeom.js";
+import { camera_create, camera_updateProjectionMatrix } from "./camera.js";
+import { controls_create } from "./controls.js";
+import { lightShadow_updateMatrices } from "./directionalLightShadow.js";
+import { entity_update } from "./entity.js";
+import { map0 } from "./maps.js";
+import { mat4_invert, mat4_multiplyMatrices } from "./mat4.js";
 import {
   object3d_create,
   object3d_traverse,
   object3d_updateWorldMatrix,
-} from './object3d.js';
-import { orthoCamera_updateProjectionMatrix } from './orthoCamera.js';
-import { pointerLock_create } from './pointerLock.js';
+} from "./object3d.js";
+import { orthoCamera_updateProjectionMatrix } from "./orthoCamera.js";
+import { pointerLock_create } from "./pointerLock.js";
 import {
   createFloat32Buffer,
   createShaderProgram,
@@ -22,20 +22,20 @@ import {
   setFloat32Attribute,
   setMat4Uniform,
   setVec3Uniform,
-} from './shader.js';
-import depthFrag from './shaders/depth_frag.glsl.js';
-import depthVert from './shaders/depth_vert.glsl.js';
-import frag from './shaders/phong_frag.glsl.js';
-import vert from './shaders/phong_vert.glsl.js';
+} from "./shader.js";
+import depthFrag from "./shaders/depth_frag.glsl.js";
+import depthVert from "./shaders/depth_vert.glsl.js";
+import frag from "./shaders/phong_frag.glsl.js";
+import vert from "./shaders/phong_vert.glsl.js";
 import {
   vec3_create,
   vec3_multiplyScalar,
   vec3_setFromMatrixPosition,
   vec3_sub,
   vec3_transformDirection,
-} from './vec3.js';
+} from "./vec3.js";
 
-var gl = canvas.getContext('webgl2');
+var gl = canvas.getContext("webgl2");
 
 gl.clearColor(0, 0, 0, 0);
 gl.enable(gl.DEPTH_TEST);
@@ -78,7 +78,7 @@ gl.texImage2D(
   0,
   gl.RGBA,
   gl.UNSIGNED_BYTE,
-  null,
+  null
 );
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -92,7 +92,7 @@ gl.framebufferTexture2D(
   gl.COLOR_ATTACHMENT0,
   gl.TEXTURE_2D,
   depthTexture,
-  0,
+  0
 );
 
 var renderBuffer = gl.createRenderbuffer();
@@ -101,13 +101,13 @@ gl.renderbufferStorage(
   gl.RENDERBUFFER,
   gl.DEPTH_COMPONENT16,
   depthTextureSize,
-  depthTextureSize,
+  depthTextureSize
 );
 gl.framebufferRenderbuffer(
   gl.FRAMEBUFFER,
   gl.DEPTH_ATTACHMENT,
   gl.RENDERBUFFER,
-  renderBuffer,
+  renderBuffer
 );
 
 var dt = 1 / 60;
@@ -125,7 +125,7 @@ var update = () => {
   previousTime = time;
 
   while (accumulatedTime >= dt) {
-    object3d_traverse(scene, object => {
+    object3d_traverse(scene, (object) => {
       entity_update(object, dt, scene);
     });
 
@@ -147,13 +147,13 @@ var setFloat32AttributeBuffer = (name, location, bufferGeom, size) => {
 
 var bufferGeoms = new WeakMap();
 
-var getBufferGeom = geometry => {
+var getBufferGeom = (geometry) => {
   var bufferGeom = bufferGeoms.get(geometry) || bufferGeom_fromGeom(geometry);
   bufferGeoms.set(geometry, bufferGeom);
   return bufferGeom;
 };
 
-var renderShadow = mesh => {
+var renderShadow = (mesh) => {
   var { geometry } = mesh;
 
   setMat4Uniform(
@@ -162,28 +162,28 @@ var renderShadow = mesh => {
     mat4_multiplyMatrices(
       mesh.modelViewMatrix,
       directional.shadow.camera.matrixWorldInverse,
-      mesh.matrixWorld,
-    ),
+      mesh.matrixWorld
+    )
   );
   setMat4Uniform(
     gl,
     depthUniforms.projectionMatrix,
-    directional.shadow.camera.projectionMatrix,
+    directional.shadow.camera.projectionMatrix
   );
 
   var bufferGeom = getBufferGeom(geometry);
 
   setFloat32AttributeBuffer(
-    'position',
+    "position",
     depthAttributes.position,
     bufferGeom,
-    3,
+    3
   );
 
   gl.drawArrays(gl.TRIANGLES, 0, bufferGeom.position.length / 3);
 };
 
-var renderMesh = mesh => {
+var renderMesh = (mesh) => {
   var { geometry, material } = mesh;
 
   gl.uniform1i(uniforms.fog, material.fog);
@@ -204,15 +204,15 @@ var renderMesh = mesh => {
     mat4_multiplyMatrices(
       mesh.modelViewMatrix,
       camera.matrixWorldInverse,
-      mesh.matrixWorld,
-    ),
+      mesh.matrixWorld
+    )
   );
   setMat4Uniform(gl, uniforms.projectionMatrix, camera.projectionMatrix);
 
   var bufferGeom = getBufferGeom(geometry);
 
-  setFloat32AttributeBuffer('position', attributes.position, bufferGeom, 3);
-  setFloat32AttributeBuffer('color', attributes.color, bufferGeom, 3);
+  setFloat32AttributeBuffer("position", attributes.position, bufferGeom, 3);
+  setFloat32AttributeBuffer("color", attributes.color, bufferGeom, 3);
 
   gl.drawArrays(gl.TRIANGLES, 0, bufferGeom.position.length / 3);
 };
@@ -235,7 +235,7 @@ var render = () => {
   lightShadow_updateMatrices(directional.shadow, directional);
   orthoCamera_updateProjectionMatrix(directional.shadow.camera);
 
-  object3d_traverse(scene, object => {
+  object3d_traverse(scene, (object) => {
     if (object.visible && object.geometry && object.castShadow) {
       renderShadow(object);
     }
@@ -257,24 +257,24 @@ var render = () => {
   vec3_setFromMatrixPosition(vector3, directional.target.matrixWorld);
   vec3_transformDirection(
     vec3_sub(direction, vector3),
-    camera.matrixWorldInverse,
+    camera.matrixWorldInverse
   );
 
   var color = vec3_multiplyScalar(
     Object.assign(vector3, directional.color),
-    directional.intensity,
+    directional.intensity
   );
 
-  setVec3Uniform(gl, uniforms['directionalLight.direction'], direction);
-  setVec3Uniform(gl, uniforms['directionalLight.color'], color);
+  setVec3Uniform(gl, uniforms["directionalLight.direction"], direction);
+  setVec3Uniform(gl, uniforms["directionalLight.color"], color);
   setMat4Uniform(
     gl,
     uniforms.directionalShadowMatrix,
-    directional.shadow.matrix,
+    directional.shadow.matrix
   );
 
   // Objects.
-  object3d_traverse(scene, object => {
+  object3d_traverse(scene, (object) => {
     if (object.visible && object.geometry && object.material) {
       renderMesh(object);
     }
@@ -293,8 +293,8 @@ var animate = () => {
 var setSize = (width, height) => {
   canvas.width = width * devicePixelRatio;
   canvas.height = height * devicePixelRatio;
-  canvas.style.width = width + 'px';
-  canvas.style.height = height + 'px';
+  canvas.style.width = width + "px";
+  canvas.style.height = height + "px";
   gl.viewport(0, 0, canvas.width, canvas.height);
 
   camera.aspect = width / height;
@@ -304,14 +304,14 @@ var setSize = (width, height) => {
 setSize(innerWidth, innerHeight);
 animate();
 
-addEventListener('resize', () => {
+addEventListener("resize", () => {
   setSize(innerWidth, innerHeight);
   render();
 });
 
-addEventListener('keypress', event => {
+addEventListener("keypress", (event) => {
   // Pause/play.
-  if (event.code === 'KeyP') {
+  if (event.code === "KeyP") {
     running = !running;
     if (running) {
       animate();
@@ -321,7 +321,7 @@ addEventListener('keypress', event => {
   }
 });
 
-addEventListener('click', () => {
+addEventListener("click", () => {
   if (!running) {
     running = true;
     animate();

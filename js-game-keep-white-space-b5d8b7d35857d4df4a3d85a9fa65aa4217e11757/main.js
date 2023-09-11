@@ -350,7 +350,7 @@ class Vec {
     this.y += dy;
   }
 }
-module.exports = {Vec};
+
 class Enemies {
   constructor(ctx) {
     this.ctx = ctx;
@@ -613,6 +613,7 @@ class GameStatus {
     this.score = null;
     this.levelUpTimer = null;
     this.levelUppedAt = null;
+    this.highScores = [];
   }
 
   getTimeStr(dt) {
@@ -663,6 +664,21 @@ class GameStatus {
     this.isGameOver = true;
     clearTimeout(bullets.timer);
     clearTimeout(this.levelUpTimer);
+    var name = prompt("Enter your name");
+    //game = 2
+    const game = 2;
+    fetch("http://localhost:3000/highscores", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, score: this.score, game }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        this.highScores = data;
+      });
     this.updateStatus();
   }
 
@@ -738,6 +754,22 @@ class GameStatus {
 
   drawGameOver() {
     this.ctx.clearRect(0, 0, GAME_MAP.MAP_WIDTH, GAME_MAP.MAP_HEIGHT);
+    //draw HIGH SCORES
+    this.ctx.fillStyle = 'white';
+    this.ctx.lineWidth = 5;
+    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    drawText(
+        this.ctx,
+        `HIGH SCORES\n`
+            + this.highScores.slice(0,3).map((score) => `${score.name} : ${score.score}`).join("\n"),
+        GAME_MAP.MAP_WIDTH / 2,
+        0,
+        Math.floor(GAME_MAP.BLOCK_SIZE),
+        1,
+        'top',
+        'center',
+        true);
+        
     this.ctx.fillStyle = 'red';
     this.ctx.lineWidth = 10;
     this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
@@ -780,7 +812,7 @@ class GameStatus {
     }
   }
 }
-module.exports = {Vec, GameStatus};
+
 function init() {
   if (touchMode) {
     window.addEventListener('touchstart', e => touchStart(e));
@@ -914,3 +946,5 @@ function touchMove(e) {
 function touchEnd() {
   player.updateTargetRadian(null);
 }
+
+export default {Vec, GameStatus};

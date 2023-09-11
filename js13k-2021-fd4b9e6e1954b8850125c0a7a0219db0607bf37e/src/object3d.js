@@ -4,13 +4,13 @@ import {
   mat4_create,
   mat4_lookAt,
   mat4_multiplyMatrices,
-} from './mat4.js';
+} from "./mat4.js";
 import {
   quat_create,
   quat_multiply,
   quat_setFromAxisAngle,
   quat_setFromRotationMatrix,
-} from './quat.js';
+} from "./quat.js";
 import {
   vec3_add,
   vec3_applyQuaternion,
@@ -19,7 +19,7 @@ import {
   vec3_X,
   vec3_Y,
   vec3_Z,
-} from './vec3.js';
+} from "./vec3.js";
 
 var _v1 = vec3_create();
 var _q1 = quat_create();
@@ -43,7 +43,7 @@ export var object3d_create = () => ({
 export var object3d_lookAt = (object, vector) => {
   quat_setFromRotationMatrix(
     object.quaternion,
-    mat4_lookAt(_m1, vector, object.position, vec3_Y),
+    mat4_lookAt(_m1, vector, object.position, vec3_Y)
   );
 };
 
@@ -83,8 +83,8 @@ export var object3d_translateOnAxis = (obj, axis, distance) => {
     obj.position,
     vec3_multiplyScalar(
       vec3_applyQuaternion(Object.assign(_v1, axis), obj.quaternion),
-      distance,
-    ),
+      distance
+    )
   );
   return obj;
 };
@@ -100,14 +100,14 @@ export var object3d_translateZ = (obj, distance) =>
 
 export var object3d_traverse = (obj, callback) => {
   callback(obj);
-  obj.children.map(child => object3d_traverse(child, callback));
+  obj.children.map((child) => object3d_traverse(child, callback));
 };
 
-export var object3d_updateMatrix = obj => {
+export var object3d_updateMatrix = (obj) => {
   mat4_compose(obj.matrix, obj.position, obj.quaternion, obj.scale);
 };
 
-export var object3d_updateWorldMatrix = obj => {
+export var object3d_updateWorldMatrix = (obj) => {
   object3d_updateMatrix(obj);
 
   if (!obj.parent) {

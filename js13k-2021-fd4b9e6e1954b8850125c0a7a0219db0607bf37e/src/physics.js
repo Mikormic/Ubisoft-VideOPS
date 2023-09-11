@@ -5,15 +5,15 @@ import {
   box3_overlapsBox,
   box3_setFromObject,
   box3_translate,
-} from './box3.js';
+} from "./box3.js";
 import {
   component_create,
   entity_add,
   entity_filter,
   entity_find,
-} from './entity.js';
-import { trigger } from './events.js';
-import { object3d_traverse } from './object3d.js';
+} from "./entity.js";
+import { trigger } from "./events.js";
+import { object3d_traverse } from "./object3d.js";
 import {
   OVERCLIP,
   pm_clipVelocity,
@@ -28,7 +28,7 @@ import {
   vec3_setScalar,
   vec3_sub,
   vec3_subVectors,
-} from './vec3.js';
+} from "./vec3.js";
 
 export var BODY_STATIC = 1;
 export var BODY_DYNAMIC = 2;
@@ -42,23 +42,23 @@ export var physics_create = (entity, physics) => {
     collide() {},
   };
   return component_create(
-    dt => vec3_addScaledVector(entity.position, component.velocity, dt),
-    component,
+    (dt) => vec3_addScaledVector(entity.position, component.velocity, dt),
+    component
   );
 };
 
 export var physics_add = (entity, physics) =>
   entity_add(entity, physics_create(entity, physics));
 
-export var get_physics_component = entity =>
+export var get_physics_component = (entity) =>
   entity_find(entity, is_physics_component);
 
-export var is_physics_component = object => object.physics;
+export var is_physics_component = (object) => object.physics;
 
-export var physics_bodies = object => {
+export var physics_bodies = (object) => {
   var bodies = [];
 
-  object3d_traverse(object, node => {
+  object3d_traverse(object, (node) => {
     bodies.push(...entity_filter(node, is_physics_component));
   });
 
@@ -237,7 +237,7 @@ export var physics_update = (() => {
   var boxA = box3_create();
   var boxB = box3_create();
 
-  return bodies => {
+  return (bodies) => {
     for (var i = 0; i < bodies.length; i++) {
       var bodyA = bodies[i];
 
@@ -270,7 +270,7 @@ export var physics_update = (() => {
           if (
             box3_containsPoint(
               physics_setBoxFromBody(box, body),
-              bullet.parent.position,
+              bullet.parent.position
             )
           ) {
             if (bullet.collide(body.parent) === false) {
@@ -283,7 +283,7 @@ export var physics_update = (() => {
         if (
           box3_overlapsBox(
             physics_setBoxFromBody(boxA, bodyA),
-            physics_setBoxFromBody(boxB, bodyB),
+            physics_setBoxFromBody(boxB, bodyB)
           )
         ) {
           // Handle case when bullet box overlaps, but not the point.
@@ -294,8 +294,8 @@ export var physics_update = (() => {
             continue;
           }
 
-          trigger(bodyA.parent, 'collide', bodyB.parent);
-          trigger(bodyB.parent, 'collide', bodyA.parent);
+          trigger(bodyA.parent, "collide", bodyB.parent);
+          trigger(bodyB.parent, "collide", bodyA.parent);
 
           narrowPhase(bodyA, bodyB, boxA, boxB);
         }

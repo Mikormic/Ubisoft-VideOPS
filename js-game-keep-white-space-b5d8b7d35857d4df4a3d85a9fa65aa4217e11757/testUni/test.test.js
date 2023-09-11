@@ -1,7 +1,7 @@
 /*
  * @jest-environment jsdom
  */
-const Class = require("../main");
+const Class = require("../main").default;
 
 describe("test Vec", () => {
   test("new Vec(1, 2) return x:1, y:2", () => {

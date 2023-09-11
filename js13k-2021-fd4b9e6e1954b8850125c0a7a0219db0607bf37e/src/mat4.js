@@ -4,7 +4,7 @@ import {
   vec3_length,
   vec3_normalize,
   vec3_subVectors,
-} from './vec3.js';
+} from "./vec3.js";
 
 var _zero = vec3_create();
 var _one = vec3_create(1, 1, 1);
@@ -141,7 +141,7 @@ export var mat4_setPosition = (m, v) => {
   return m;
 };
 
-export var mat4_invert = m => {
+export var mat4_invert = (m) => {
   // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
   var [
     n11,

@@ -29,4 +29,14 @@ function circleCollides (a, b, r) {
   var y = a[1] - b[1];
   return x*x+y*y < r*r;
 }
-module.exports = {normAngle, smoothstep, scoreTxt, dist, length, circleCollides};
+
+var module = module || {};
+
+module.exports = {
+  normAngle: normAngle,
+  smoothstep: smoothstep,
+  scoreTxt: scoreTxt,
+  dist: dist,
+  length: length,
+  circleCollides: circleCollides
+};

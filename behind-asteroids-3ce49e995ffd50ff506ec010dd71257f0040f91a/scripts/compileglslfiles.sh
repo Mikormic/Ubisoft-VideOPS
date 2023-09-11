@@ -1,4 +1,3 @@
-
 if [ "$#" -ne 2 ]; then
   echo "Invalid arguments. Usage: $0 fromDir toDir" >&2;
   exit 1;
